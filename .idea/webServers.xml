@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="58127483-865e-44dc-af9b-b43f41a7317e" name="Tiago" url="https://api.minecraftbetter.fr">
+        <fileTransfer rootFolder="/mnt/user" accessType="SFTP" host="minecraftbetter.fr" port="1025" sshConfigId="272499b9-f6f3-4cf7-83f6-4edf937cf0f6" sshConfig="Tiago" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
