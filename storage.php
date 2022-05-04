@@ -1,10 +1,11 @@
 <?php
+include $_SERVER['DOCUMENT_ROOT']."/config.php";
+assert(isset($STORAGE_PATH) && isset($URL));
 
 // ----- CONST ----- //
 
-$url = "https://api.minecraftbetter.fr/storage";
+$url = $URL."/storage";
 $idKey = "path";
-$rootPath = "/web/storage/";
 
 
 // ----- PROG ----- //
@@ -24,13 +25,16 @@ if (str_contains($id, "..") || str_contains($id, "./")) {
 }
 
 
-//send local file
-$filename = $rootPath . $id;
+$filename = $STORAGE_PATH . $id;
+
+// Not found
 if (!file_exists($filename)) {
     header("Content-Type: application/json");
     echo json_encode(["code" => 404, "message" => "Not found", "details" => "File not found at " . $filename]);
     exit();
 }
+
+// Folder
 if (!is_file($filename)) {
     header("Content-Type: application/json");
     $data = ["code" => 200, "message" => "Folder content", "details" => $filename];
@@ -45,6 +49,8 @@ if (!is_file($filename)) {
     echo json_encode($data);
     exit();
 }
+
+// Send local file
 header("Content-Type: application/octet-stream");
 header("Content-Transfer-Encoding: Binary");
 header("Content-Length:" . filesize($filename));
