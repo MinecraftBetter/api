@@ -19,11 +19,18 @@ foreach ($o_iter as $o_name) {
     if (!$o_name->isFile()) continue;
     $fullPath = $o_name->getPathname();
     if (preg_match('/(^|\/)\.\w+/i', $fullPath)) continue; // Hidden dir
-    if ($o_name->getPath() == $path) continue;
 
     $localFilePath = substr($fullPath, strlen($STORAGE_PATH));
-    $rootFolder = preg_split("/\//", $localFilePath)[1];
-    $filePath = substr($localFilePath, strlen($folder . "/" . $rootFolder . "/"));
+    $pathFolders = preg_split("/\//", $localFilePath);
+    if (count($pathFolders) > 2) {
+        $rootFolder = $pathFolders[1];
+        $filePath = substr($localFilePath, strlen($folder . "/" . $rootFolder . "/"));
+    }
+    else {
+        $rootFolder = ".";
+        $filePath = substr($localFilePath, strlen($folder . "/"));
+    }
+
     $results[$rootFolder][$filePath] = [
         "hash" => sha1_file($fullPath),
         "size" => $o_name->getSize(),
