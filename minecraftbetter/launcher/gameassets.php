@@ -1,16 +1,23 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
 assert(isset($STORAGE_PATH) && isset($URL));
+header("Content-Type: application/json");
 
 // ----- CONST ----- //
 
-$folder = "gameassets";
-$noOverride = ["config/"]; // List of relative paths
+$folder = "gameassets"; // No trailing slash
+$noOverride = ["config/", "./options.txt"]; // List of relative paths
+$cache_life = 7 * 24 * 3600; // 7j (1h = 3600s)
 
 
 // ----- PROG ----- //
 
-$path = $STORAGE_PATH . $folder; // No trailing slash
+$path = $STORAGE_PATH . $folder;
+
+$cache = $path. "/.cache.json";
+$filemtime = filemtime($cache);
+if (!isset($_GET["force"]) && !isset($_GET["update"]) && $filemtime && (time() - $filemtime <= $cache_life)) { echo file_get_contents($cache); return; }
+
 $o_dir = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
 $o_iter = new RecursiveIteratorIterator($o_dir);
 
@@ -40,8 +47,15 @@ foreach ($o_iter as $o_name) {
     ];
 }
 
-header("Content-Type: application/json");
-echo json_encode(["code" => 200, "message" => "Success", "details" => "Custom assets for Minecraft Better", "results" => $results]);
+$finalJson = json_encode([
+    "code" => 200,
+    "date" => date("Y-m-d H:i:s", $filemtime ?? time()),
+    "message" => "Success",
+    "details" => "Custom assets for Minecraft Better",
+    "results" => $results
+]);
+file_put_contents($cache, $finalJson);
+echo $finalJson;
 
 function override($fPath): bool
 {
