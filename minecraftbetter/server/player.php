@@ -1,15 +1,12 @@
 <?php
 
+include_once __DIR__ . "/php-minecraft-skin-render/3d.php";
+
 if (!isset($_GET["name"])) return;
+$hair = isset($_GET["disableHair"]) ? "false" : "true";
+$head = isset($_GET["body"]) ? "false" : "true";
 
-$type = "head";
-if (isset($_GET["type"]) && in_array($_GET["type"], ["head", "body"])) $type = $_GET["type"];
-
-$result = null;
-if ($type == "head")
-    $result = json_decode(file_get_contents("https://minecraft-api.com/api/skins/".$_GET["name"]."/head/10.5/10/25/json"), true)["head"];
-if ($type == "body")
-    $result = json_decode(file_get_contents("https://minecraft-api.com/api/skins/".$_GET["name"]."/body/10.5/10/0/0/25/json"), true)["skin"];
-
+$player = new render3DPlayer($_GET["name"], null, 10, 5, 10, 5,-2,-20,2, $hair, $head, 'base64', 25, 'true', 'true');
+$png = $player->get3DRender();
 header('Content-Type: image/png');
-echo base64_decode($result);
+echo base64_decode($png);
