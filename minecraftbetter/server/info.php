@@ -22,9 +22,9 @@ try {
     $data = $Ping->Query();
     $results["version"] = $data["version"]["name"];
     $results["description"] = $data["description"]["text"];
-    $results["players_max"] = $data["players"]["max"];
     $results["players_online"] = $data["players"]["online"];
-    $results["icon"] = $data["favicon_base64"] ?? $data["favicon"];
+    $results["players_max"] = $data["players"]["max"];
+    $results["icon"] = "https://api.minecraftbetter.com/minecraftbetter/server/icon";
 } catch (MinecraftPingException $e) {
     $results["errors"]["ping"] = $e->getMessage();
 } finally {
@@ -36,9 +36,9 @@ try {
     $Query->Connect('minecraftbetter.com', 25565);
 
     $players = $Query->GetPlayers();
-    if(!is_array($players)) $results["players"] = [];
-    foreach ($players as $player)
-        $results["players"][] = ["name" => $player, "head" => "https://api.minecraftbetter.com/minecraftbetter/server/player?name=".$player];
+    if (!is_array($players)) $results["players"] = [];
+    else foreach ($players as $player)
+        $results["players"][] = ["name" => $player, "head" => "https://api.minecraftbetter.com/minecraftbetter/server/player?name=" . $player];
 } catch (MinecraftQueryException $e) {
     $results["players"] = [];
     $results["errors"]["query"] = $e->getMessage();
