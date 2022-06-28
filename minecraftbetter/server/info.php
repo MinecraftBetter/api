@@ -17,8 +17,8 @@ use xPaw\MinecraftPingException;
 $results = [];
 
 
-$Ping = new MinecraftPing('minecraftbetter.com', 25565);
 try {
+    $Ping = new MinecraftPing('minecraftbetter.com', 25565);
     $data = $Ping->Query();
     $results["version"] = $data["version"]["name"];
     $results["description"] = $data["description"]["text"];
@@ -26,9 +26,17 @@ try {
     $results["players_max"] = $data["players"]["max"];
     $results["icon"] = "https://api.minecraftbetter.com/minecraftbetter/server/icon";
 } catch (MinecraftPingException $e) {
-    $results["errors"]["ping"] = $e->getMessage();
+    header('Content-Type: application/json');
+    http_response_code(503);
+    echo json_encode([
+        "code" => 503,
+        "date" => date("Y-m-d H:i:s", $filemtime ?? time()),
+        "message" => "Error",
+        "details" => $e->getMessage()
+    ]);
+    return;
 } finally {
-    $Ping->Close();
+    if(isset($Ping)) $Ping->Close();
 }
 
 try {
@@ -49,6 +57,6 @@ echo json_encode([
     "code" => 200,
     "date" => date("Y-m-d H:i:s", $filemtime ?? time()),
     "message" => "Success",
-    "details" => "Minecraft server infos",
+    "details" => "Minecraft server info",
     "results" => $results
 ]);
