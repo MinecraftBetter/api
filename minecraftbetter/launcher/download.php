@@ -1,12 +1,13 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
+assert(isset($STORAGE_PATH) && isset($URL) && isset($GITHUB_TOKEN));
 
 $opts = [
     'http' => [
         'method' => 'GET',
         'header' => [
-            'User-Agent: PHP'
+            'User-Agent: PHP',
+            'Authorization: token '.$GITHUB_TOKEN
         ]
     ]
 ];
