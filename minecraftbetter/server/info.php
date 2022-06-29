@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
+assert(isset($STORAGE_PATH) && isset($URL));
 
 
 require __DIR__ . '/php-minecraft-query/MinecraftPing.php';
@@ -24,7 +24,7 @@ try {
     $results["description"] = $data["description"]["text"];
     $results["players_online"] = $data["players"]["online"];
     $results["players_max"] = $data["players"]["max"];
-    $results["icon"] = "https://api.minecraftbetter.com/minecraftbetter/server/icon";
+    $results["icon"] = $URL . "/minecraftbetter/server/icon";
 } catch (MinecraftPingException $e) {
     header('Content-Type: application/json');
     http_response_code(503);
@@ -36,7 +36,7 @@ try {
     ]);
     return;
 } finally {
-    if(isset($Ping)) $Ping->Close();
+    if (isset($Ping)) $Ping->Close();
 }
 
 try {
@@ -46,7 +46,7 @@ try {
     $players = $Query->GetPlayers();
     if (!is_array($players)) $results["players"] = [];
     else foreach ($players as $player)
-        $results["players"][] = ["name" => $player, "head" => "https://api.minecraftbetter.com/minecraftbetter/server/player?name=" . $player];
+        $results["players"][] = ["name" => $player, "head" => $URL . "/minecraftbetter/server/player?name=" . $player];
 } catch (MinecraftQueryException $e) {
     $results["players"] = [];
     $results["errors"]["query"] = $e->getMessage();
