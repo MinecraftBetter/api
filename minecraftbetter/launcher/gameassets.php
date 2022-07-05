@@ -1,6 +1,6 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-assert(isset($STORAGE_PATH) && isset($URL));
+assert(isset($STORAGE_PATH) && isset($API_URL));
 header("Content-Type: application/json");
 
 // ----- CONST ----- //
@@ -16,6 +16,18 @@ $path = $STORAGE_PATH . $folder;
 
 $cache = $path. "/.cache.json";
 $filemtime = filemtime($cache);
+
+if (isset($_GET["update"])){
+    $result = array();
+    print("<pre>");
+    print ("cd \"".$path."\" && git pull");
+    exec("cd \"".$path."\" && git pull", $result);
+    foreach ($result as $line) {
+        print($line . "\n");
+    }
+    print("</pre>");
+}
+
 if (!isset($_GET["force"]) && !isset($_GET["update"]) && $filemtime && (time() - $filemtime <= $cache_life)) { echo file_get_contents($cache); return; }
 
 $o_dir = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
@@ -41,7 +53,7 @@ foreach ($o_iter as $o_name) {
     $results[$rootFolder][$filePath] = [
         "hash" => sha1_file($fullPath),
         "size" => $o_name->getSize(),
-        "url" => $URL . "/storage?path=" . $localFilePath,
+        "url" => $API_URL . "/storage?path=" . $localFilePath,
         "path" => $filePath,
         "override" => override($rootFolder."/".$filePath)
     ];

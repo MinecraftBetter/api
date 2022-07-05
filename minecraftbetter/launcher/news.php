@@ -1,6 +1,6 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-assert(isset($STORAGE_PATH) && isset($URL));
+assert(isset($STORAGE_PATH) && isset($API_URL));
 header("Content-Type: application/json");
 
 $results = json_decode(file_get_contents($STORAGE_PATH . "news.json"), true);

@@ -1,6 +1,6 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-assert(isset($STORAGE_PATH) && isset($URL) && isset($GITHUB_TOKEN));
+assert(isset($STORAGE_PATH) && isset($API_URL) && isset($GITHUB_TOKEN));
 
 $opts = [
     'http' => [

@@ -1,10 +1,10 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT']."/config.php";
-assert(isset($STORAGE_PATH) && isset($URL));
+assert(isset($STORAGE_PATH) && isset($API_URL));
 
 // ----- CONST ----- //
 
-$url = $URL."/storage";
+$url = $API_URL."/storage";
 $idKey = "path";
 
 
