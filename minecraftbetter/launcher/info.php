@@ -18,7 +18,8 @@ $version = json_decode(file_get_contents("https://api.github.com/repos/Minecraft
 $assets = json_decode(file_get_contents($version["assets_url"], false, $context), true);
 $assetsResults = [];
 foreach ($assets as $asset) {
-    $assetsResults[$asset["name"]] = [
+    $assetsResults[] = [
+        "name" => $asset["name"],
         "size" => $asset["size"],
         "download_count" => $asset["download_count"],
         "url" => $asset["browser_download_url"]
@@ -32,7 +33,7 @@ $results = [
         "version_number" => $version["tag_name"],
         "date" => $version["created_at"],
         "changelog" => $version["body"],
-        "url" => $URL . "/minecraftbetter/launcher/download",
+        "url" => $URL,
         "assets" => $assetsResults
     ]
 ];
