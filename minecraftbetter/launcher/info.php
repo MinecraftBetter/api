@@ -31,6 +31,7 @@ $results = [
     "latest_version" => [
         "version_number" => $version["tag_name"],
         "date" => $version["created_at"],
+        "changelog" => $version["body"],
         "url" => $URL . "/minecraftbetter/launcher/download",
         "assets" => $assetsResults
     ]
