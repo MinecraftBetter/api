@@ -1,6 +1,6 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
- assert(isset($STORAGE_PATH) && isset($API_URL));
+assert(isset($STORAGE_PATH) && isset($API_URL));
 
 
 require __DIR__ . '/php-minecraft-query/MinecraftPing.php';
@@ -45,8 +45,11 @@ try {
 
     $players = $Query->GetPlayers();
     if (!is_array($players)) $results["players"] = [];
-    else foreach ($players as $player)
-        $results["players"][] = ["name" => $player, "head" => $API_URL . "/minecraftbetter/server/player?name=" . $player];
+    else {
+        sort($players, SORT_NATURAL);
+        foreach ($players as $player)
+            $results["players"][] = ["name" => $player, "head" => $API_URL . "/minecraftbetter/server/player?name=" . $player];
+    }
 } catch (MinecraftQueryException $e) {
     $results["players"] = [];
     $results["errors"]["query"] = $e->getMessage();
