@@ -46,7 +46,7 @@ try {
     $players = $Query->GetPlayers();
     if (!is_array($players)) $results["players"] = [];
     else {
-        sort($players, SORT_NATURAL);
+        sort($players, SORT_NATURAL | SORT_FLAG_CASE);
         foreach ($players as $player)
             $results["players"][] = ["name" => $player, "head" => $API_URL . "/minecraftbetter/server/player?name=" . $player];
     }
