@@ -7,19 +7,25 @@ $opts = [
         'method' => 'GET',
         'header' => [
             'User-Agent: PHP',
-            'Authorization: token '.$GITHUB_TOKEN
+            'Authorization: token ' . $GITHUB_TOKEN
         ]
     ]
 ];
 $context = stream_context_create($opts);
 
-$isWin = isset($_GET["os"]) && $_GET["os"] == "windows";
+$OS = [
+    "windows" => ["exe", "jar"],
+    "macos" => ["jar"],
+    "ubuntu" => ["jar"]
+];
+$os = (isset($_GET["os"]) && in_array($_GET["os"], array_keys($OS))) ? $_GET["os"] : array_keys($OS)[0];
+$ext = (isset($_GET["ext"]) && in_array($_GET["ext"], $OS[$os])) ? $_GET["ext"] : $OS[$os][0];
 
 $version = json_decode(file_get_contents("https://api.github.com/repos/MinecraftBetter/launcher/releases/latest", false, $context), true);
 $assets = json_decode(file_get_contents($version["assets_url"], false, $context), true);
-foreach ($assets as $asset){
-    if (!endsWith($asset["name"], $isWin ? ".exe": ".jar")) continue;
-    header("Location: ".$asset["browser_download_url"]);
+foreach ($assets as $asset) {
+    if (!endsWith($asset["name"], $os . "-latest-" . $ext)) continue;
+    header("Location: " . $asset["browser_download_url"]);
     exit();
 }
 

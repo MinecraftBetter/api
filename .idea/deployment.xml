@@ -5,14 +5,7 @@
       <paths name="Tiago">
         <serverdata>
           <mappings>
-            <mapping deploy="/web/api" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="Webtrees">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="api" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
