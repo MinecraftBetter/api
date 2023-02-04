@@ -261,7 +261,7 @@
 						$cosmetic = imagecreatefrompng('./cosmetics/' . $this->playerCosmetic . '.png');
 						imagealphablending($skin, true);
 						imagesavealpha($skin, true);
-						imagecopy($skin, $cosmetic, 0, 0, 0, 0, 100, 100);
+						if ($cosmetic !== false) imagecopy($skin, $cosmetic, 0, 0, 0, 0, 100, 100);
 
 						$this->playerSkin = $skin;
 					} else {

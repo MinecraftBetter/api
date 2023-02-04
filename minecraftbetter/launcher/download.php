@@ -24,7 +24,7 @@ $ext = (isset($_GET["ext"]) && in_array($_GET["ext"], $OS[$os])) ? $_GET["ext"] 
 $version = json_decode(file_get_contents("https://api.github.com/repos/MinecraftBetter/launcher/releases/latest", false, $context), true);
 $assets = json_decode(file_get_contents($version["assets_url"], false, $context), true);
 foreach ($assets as $asset) {
-    if (!endsWith($asset["name"], $os . "-latest-" . $ext)) continue;
+    if (!endsWith($asset["name"], "-" . $os . "-latest-" . $ext)) continue;
     header("Location: " . $asset["browser_download_url"]);
     exit();
 }
