@@ -15,9 +15,22 @@ header("Content-Type: application/json");
 $folder = "gameassets"; // No trailing slash
 $noOverride = ["config/", "./options.txt"]; // List of relative paths
 $cache_life = 7 * 24 * 3600; // 7j (1h = 3600s)
+$valid_passwords = array ("admin" => "admin");
 
 
 // ----- PROG ----- //
+
+
+$valid_users = array_keys($valid_passwords);
+$user = $_SERVER['PHP_AUTH_USER'];
+$pass = $_SERVER['PHP_AUTH_PW'];
+$validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+if (!$validated) {
+    header('WWW-Authenticate: Basic realm="Accès protégé"');
+    http_response_code(401);
+    die ("Not authorized");
+}
+
 
 $path = $STORAGE_PATH . $folder . "/data/";
 
