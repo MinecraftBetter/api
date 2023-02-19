@@ -16,7 +16,7 @@ $context = stream_context_create($opts);
 $OS = [
     "windows" => ["exe", "jar"],
     "macos" => ["jar"],
-    "ubuntu" => ["jar"]
+    "linux" => ["jar"]
 ];
 $os = (isset($_GET["os"]) && in_array($_GET["os"], array_keys($OS))) ? $_GET["os"] : array_keys($OS)[0];
 $ext = (isset($_GET["ext"]) && in_array($_GET["ext"], $OS[$os])) ? $_GET["ext"] : $OS[$os][0];
@@ -24,7 +24,7 @@ $ext = (isset($_GET["ext"]) && in_array($_GET["ext"], $OS[$os])) ? $_GET["ext"] 
 $version = json_decode(file_get_contents("https://api.github.com/repos/MinecraftBetter/launcher/releases/latest", false, $context), true);
 $assets = json_decode(file_get_contents($version["assets_url"], false, $context), true);
 foreach ($assets as $asset) {
-    if (!endsWith($asset["name"], "-" . $os . "-latest-" . $ext)) continue;
+    if (!endsWith($asset["name"], "-" . $os . "-." . $ext)) continue;
     header("Location: " . $asset["browser_download_url"]);
     exit();
 }
