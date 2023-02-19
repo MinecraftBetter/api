@@ -12,11 +12,44 @@ $folder = "gameassets"; // No trailing slash
 
 $path = $STORAGE_PATH . $folder;
 
-$cachePath = $path . "/.cache/";
-$caches = [];
+$userProfile =  $_GET["profile"];
 $userCacheVersion = intval($_GET["from"]);
 
+if(!isset($userProfile)){
+    echo json_encode([
+        "code" => 400,
+        "date" => date("Y-m-d H:i:s", time()),
+        "message" => "Error",
+        "details" => "Profile name is required"
+    ]);
+    http_response_code(400);
+    exit;
+}
 
+$cachePath = realpath($path . "/.cache/" . $userProfile);
+if(!$cachePath){
+    echo json_encode([
+        "code" => 404,
+        "date" => date("Y-m-d H:i:s", time()),
+        "message" => "Error",
+        "details" => "Profile hasn't been found"
+    ]);
+    http_response_code(404);
+    exit;
+}
+if(!str_contains($cachePath, $path . "/.cache/")) {
+    echo json_encode([
+        "code" => 400,
+        "date" => date("Y-m-d H:i:s", time()),
+        "message" => "Error",
+        "details" => "Security error"
+    ]);
+    http_response_code(400);
+    exit;
+}
+
+$cachePath .= "/";
+$caches = [];
 if ($handle = opendir($cachePath)) {
     while (false !== ($entry = readdir($handle))) {
         if ($entry == "." || $entry == "..") continue;

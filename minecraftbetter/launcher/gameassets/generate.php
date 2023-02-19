@@ -31,10 +31,33 @@ if (!$validated) {
     die ("Not authorized");
 }
 
+$profile =  $_GET["profile"];
+if(!isset($profile)){
+    echo json_encode([
+        "code" => 400,
+        "date" => date("Y-m-d H:i:s", time()),
+        "message" => "Error",
+        "details" => "Profile name is required"
+    ]);
+    http_response_code(400);
+    exit;
+}
 
-$path = $STORAGE_PATH . $folder . "/data/";
+$path = $STORAGE_PATH . $folder . "/data/".$profile;
 
-$cachePath = $STORAGE_PATH . $folder . "/.cache/";
+$cachePath = realpath($STORAGE_PATH . $folder . "/.cache/" . $profile);
+if(!str_contains($cachePath, $STORAGE_PATH . $folder . "/.cache/")) {
+    echo json_encode([
+        "code" => 400,
+        "date" => date("Y-m-d H:i:s", time()),
+        "message" => "Error",
+        "details" => "Security error"
+    ]);
+    http_response_code(400);
+    exit;
+}
+
+$cachePath .= "/";
 $cache = $cachePath . time() . ".json";
 
 if (isset($_GET["update"])) {
@@ -64,20 +87,20 @@ foreach ($o_iter as $o_name) {
     if (preg_match('/(^|\/)\.\w+/i', $fullPath)) continue; // Hidden dir
 
     $localFilePath = substr($fullPath, strlen($STORAGE_PATH));
-    $filePath = substr($localFilePath, strlen($folder . "/data/"));
+    $filePath = substr($localFilePath, strlen($folder . "/data/".$profile."/"));
 
     $results[$filePath] = [
         "hash" => sha1_file($fullPath),
         "size" => $o_name->getSize(),
-        "url" => $API_URL . "/storage?path=" . $localFilePath,
+        "url" => $API_URL . "/storage?path=" . urlencode($localFilePath),
         "path" => $filePath,
         "override" => override($filePath)
     ];
 }
 
-$finalJson = json_encode($results);
-file_put_contents($cache, $finalJson);
-echo $finalJson;
+file_put_contents($cache, json_encode($results));
+$results["path"] = $cache;
+echo json_encode($results);
 
 function override($fPath): bool
 {
