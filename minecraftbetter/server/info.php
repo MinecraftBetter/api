@@ -41,7 +41,7 @@ try {
 
 try {
     $Query = new MinecraftQuery();
-    $Query->Connect('minecraftbetter.com', 25565);
+    $Query->Connect('mika.minecraftbetter.com', 25565);
 
     $players = $Query->GetPlayers();
     if (!is_array($players)) $results["players"] = [];
