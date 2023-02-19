@@ -10,6 +10,7 @@ $Ping = null;
 try {
     $Ping = new MinecraftPing('minecraftbetter.com', 25565);
     $data = $Ping->Query();
+    if(!isset($data["favicon"])) exit();
     $strImage = $data["favicon"];
     $strImage = str_replace('data:image/png;base64,', '', $strImage);
     $strImage = str_replace(' ', '+', $strImage);
