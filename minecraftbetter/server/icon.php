@@ -8,7 +8,7 @@ use xPaw\MinecraftPingException;
 
 $Ping = null;
 try {
-    $Ping = new MinecraftPing('minecraftbetter.com', 25565);
+    $Ping = new MinecraftPing('justbetter.fr', 25565);
     $data = $Ping->Query();
     if(!isset($data["favicon"])) exit();
     $strImage = $data["favicon"];

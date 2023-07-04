@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="API Tiago">
+  <component name="PublishConfigData" serverName="API Tiago" compareModeInSync="SIZE">
     <serverData>
       <paths name="API Tiago">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath path="/minecraftbetter/maven" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>
