@@ -1,0 +1,257 @@
+openapi: 3.0.0
+info:
+  title: Minecraft Better
+  description: |-
+    
+
+  contact:
+    name: Evan Galli (Contact par Discord)
+    url: https://discord.gg/4TC5eNEkE5
+  version: 1.0.0
+servers:
+  - url: https://api.justbetter.fr
+tags:
+  - name: storage
+    description: Storage manager
+  - name: launcher
+    description: Everything specifically made for the launcher
+  - name: server
+    description: APIs about the minecraft server
+paths:
+  /storage:
+    get:
+      tags:
+        - storage
+      summary: Download files from the storage
+      operationId: getFileFromStorage
+      parameters:
+        - in: query
+          name: path
+          schema:
+            type: string
+          required: false
+          description: Relative path of the file
+      responses:
+        '200':
+          description: successful operation
+
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /minecraftbetter/launcher/info:
+    get:
+      tags:
+        - launcher
+      summary: Gets informations about the launcher
+      description: Usefull to retreive the latest version
+      operationId: getLauncherInfo
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /minecraftbetter/launcher/news:
+    get:
+      tags:
+        - launcher
+      summary: Gets latest news
+      operationId: getNews
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /minecraftbetter/launcher/download:
+    get:
+      tags:
+        - launcher
+      summary: Download the launcher
+      operationId: downloadLauncher
+      parameters: 
+        - in: query
+          name: os
+          schema:
+            type: string
+            enum: ["windows", "macos", "ubuntu"]
+            default: "windows"
+          required: false
+          description: The OS
+        - in: query
+          name: ext
+          schema:
+            type: string
+            enum: ["exe", "jar"]
+          required: false
+          description: |
+            The extension (default is jar for MacOS and Ubuntu, for Windows, default is exe)
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/java-archive:
+              schema:
+                type: string
+                format: binary
+            application/vnd.microsoft.portable-executable:
+              schema:
+                type: string
+                format: binary
+  /minecraftbetter/launcher/gameassets/get:
+    get:
+      tags:
+        - launcher
+      summary: Lists all the gameassets
+      operationId: getGameAssets
+      parameters:
+        - in: query
+          name: profile
+          schema:
+            type: string
+            enum: ["1.8.9", "1.19.3"]
+          required: true
+          description: The profile
+        - in: query
+          name: from
+          schema:
+            type: integer
+            format: uint
+          required: false
+          description: The version of the profile that is installed locally
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /minecraftbetter/launcher/gameassets/generate:
+    get:
+      tags:
+        - launcher
+      summary: Generate the gameassets list
+      operationId: generateGameAssets
+      security:
+        - BasicAuth: []
+      parameters:
+        - in: query
+          name: profile
+          schema:
+            type: string
+            enum: [ "1.8.9", "1.19.3" ]
+          required: true
+          description: The profile
+        - in: query
+          name: update
+          schema:
+            type: boolean
+          required: false
+          description: Git update before generating
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /minecraftbetter/server/info:
+    get:
+      tags:
+        - server
+      summary: Gets informations about the minecraft server
+      description: Usefull to retreive the online players
+      operationId: getServerInfo
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /minecraftbetter/server/player:
+    get:
+      tags:
+        - server
+      summary: Generates an image of the player
+      operationId: getPlayerImage
+      parameters: 
+        - in: query
+          name: name
+          description: The player's name
+          example: 06Craft
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: disableHair
+          description: Disables the player's hear
+          schema:
+            type: boolean
+            default: false
+          required: false
+        - in: query
+          name: body
+          description: Generates an image of the full body of the player's skin
+          schema:
+            type: boolean 
+            default: false
+          required: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+  /minecraftbetter/server/icon:
+    get:
+      tags:
+        - server
+      summary: Gets the minecraft server icon
+      operationId: getServerIcon
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '502':
+          description: The Minecraft server couldn't be reach
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Failed to connect or create a socket: 111 (Connection refused)"
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+          description: The HTTP response code
+        date:
+          type: string
+          example: "2023-02-04 00:33:05"
+          description: The date of the response
+        message:
+          type: string
+          example: "Success"
+        details:
+          type: string
+        results:
+          type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
