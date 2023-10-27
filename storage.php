@@ -18,14 +18,13 @@ if (!function_exists('str_contains')) {
 }
 
 $id = isset($_GET[$idKey]) ? trim($_GET[$idKey], "/\\") : "";
-if (str_contains($id, "..") || str_contains($id, "./")) {
-    http_response_code(400);
-    echo 'Illegal char in ' . $idKey;
+$filename = realpath($STORAGE_PATH . $id);
+if(!str_contains($filename, $STORAGE_PATH)){
+    header("Content-Type: application/json");
+    echo json_encode(["code" => 400, "message" => "Illegal path"]);
     exit();
 }
 
-
-$filename = $STORAGE_PATH . $id;
 
 // Not found
 if (!file_exists($filename)) {
