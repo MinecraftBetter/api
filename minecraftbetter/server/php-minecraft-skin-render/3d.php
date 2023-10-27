@@ -47,66 +47,7 @@
 	$minY = null;
 	$maxY = null;
 	/* End Global variabel */
-	
-	/* Function converts the old _GET names to
-	 * the new names. This makes it still compatable
-	 * with scrips using the old names.
-	 * 
-	 * Espects the English _GET name.
-	 * Returns the _GET value or the default value.
-	 * Return false if the _GET is not found.
-	 */
-	function grabGetValue($name) {
-		$parameters = array('user' => array('old' => 'login', 'default' => false),
-							'cosmetic' => array('old' => 'cosmetic', 'default' => false),
-							'vr' => array('old' => 'a', 'default' => '-25'),
-							'hr' => array('old' => 'w', 'default' => '35'),
-							'hrh' => array('old' => 'wt', 'default' => '0'),
-							'vrll' => array('old' => 'ajg', 'default' => '0'),
-							'vrrl' => array('old' => 'ajd', 'default' => '0'),
-							'vrla' => array('old' => 'abg', 'default' => '0'),
-							'vrra' => array('old' => 'abd', 'default' => '0'),
-							'displayHair' => array('old' => 'displayHairs', 'default' => 'true'),
-							'headOnly' => array('old' => 'headOnly', 'default' => 'false'),
-							'format' => array('old' => 'format', 'default' => 'png'),
-							'ratio' => array('old' => 'ratio', 'default' => '12'),
-							'aa' => array('old' => 'aa', 'default' => 'false'),
-							'layers' => array('old' => 'layers', 'default' => 'true')
-							);
-		
-		if(array_key_exists($name, $parameters)) {
-			if(isset($_GET[$name])) {
-				return $_GET[$name];
-			} else if (isset($_GET[$parameters[$name]['old']])) {
-				return $_GET[$parameters[$name]['old']];
-			}
-			return $parameters[$name]['default'];
-		}
-		
-		return false;
-	}
-	
-	// Check if the player name value has been set. If not. Do nothing.
-	if(grabGetValue('user') !== false) {
-		// There is a player name so they want an image output via url
-		$player = new render3DPlayer(	grabGetValue('user'),
-										grabGetValue('cosmetic'),
-										grabGetValue('vr'),
-										grabGetValue('hr'),
-										grabGetValue('hrh'),
-										grabGetValue('vrll'),
-										grabGetValue('vrrl'),
-										grabGetValue('vrla'),
-										grabGetValue('vrra'),
-										grabGetValue('displayHair'),
-										grabGetValue('headOnly'),
-										grabGetValue('format'),
-										grabGetValue('ratio'),
-										grabGetValue('aa'),
-										grabGetValue('layers')
-								);
-		$player->get3DRender('browser');
-	}
+
 	
 	/* Render3DPlayer class
 	 *
