@@ -7,7 +7,7 @@
  */
 
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-assert(isset($STORAGE_PATH) && isset($API_URL));
+assert(isset($STORAGE_PATH) && isset($API_URL) && isset($ADMINS));
 header("Content-Type: application/json");
 
 // ----- CONST ----- //
@@ -15,16 +15,15 @@ header("Content-Type: application/json");
 $folder = "gameassets"; // No trailing slash
 $noOverride = ["config/", "./options.txt"]; // List of relative paths
 $cache_life = 7 * 24 * 3600; // 7j (1h = 3600s)
-$valid_passwords = array ("admin" => "admin");
 
 
 // ----- PROG ----- //
 
 
-$valid_users = array_keys($valid_passwords);
+$valid_users = array_keys($ADMINS);
 $user = $_SERVER['PHP_AUTH_USER'];
 $pass = $_SERVER['PHP_AUTH_PW'];
-$validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+$validated = in_array($user, $valid_users) && hash('sha256', $pass) == $ADMINS[$user];
 if (!$validated) {
     header('WWW-Authenticate: Basic realm="Accès protégé"');
     http_response_code(401);
