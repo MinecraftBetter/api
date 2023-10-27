@@ -1,4 +1,3 @@
-**API backend** for [Minecraft Better](https://minecraftbetter.com)
+**API backend** for [Minecraft Better](https://justbetter.fr)
 
-The API is available at [https://api.minecraftbetter.fr](https://api.minecraftbetter.com/)  
-[Documentation](https://api.minecraftbetter.com/swagger/)
+The API is available at [https://api.justbetter.fr](https://api.justbetter.fr/)

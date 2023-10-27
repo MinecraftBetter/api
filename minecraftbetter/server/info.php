@@ -1,6 +1,6 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/config.php";
-assert(isset($STORAGE_PATH) && isset($API_URL));
+assert(isset($STORAGE_PATH) && isset($API_URL) & isset($MINECRAFT_URL));
 
 
 require __DIR__ . '/php-minecraft-query/MinecraftPing.php';
@@ -18,7 +18,7 @@ $results = [];
 
 
 try {
-    $Ping = new MinecraftPing('minecraftbetter.com', 25565);
+    $Ping = new MinecraftPing($MINECRAFT_URL, 25565);
     $data = $Ping->Query();
     $results["version"] = $data["version"]["name"];
     $results["description"] = $data["description"]["text"];
